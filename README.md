@@ -1,222 +1,352 @@
-## Laboratory work II
+## Laboratory work V
 
-Данная лабораторная работа посвещена изучению систем контроля версий на примере **Git**.
+Данная лабораторная работа посвещена изучению фреймворков для тестирования на примере **GTest**
 
-```bash
-$ open https://git-scm.com
+```ShellSession
+$ open https://github.com/google/googletest
 ```
 
 ## Tasks
 
-- [ ] 1. Создать публичный репозиторий с названием **lab02** и с лиценцией **MIT**
-- [ ] 2. Сгенирировать токен для доступа к сервису **GitHub** с правами **repo**
-- [ ] 3. Ознакомиться со ссылками учебного материала
-- [ ] 4. Выполнить инструкцию учебного материала
-- [ ] 5. Составить отчет и отправить ссылку личным сообщением в **Slack**
+- [x] 1. Создать публичный репозиторий с названием **lab05** на сервисе **GitHub**
+- [x] 2. Выполнить инструкцию учебного материала
+- [x] 3. Ознакомиться со ссылками учебного материала
+- [x] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
 
 ## Tutorial
 
-Установка переменных
+Настройка окружения
+
 ```ShellSession
-$ export GITHUB_USERNAME=FalaleevDanila                               # Экспорт переменной GITHUB_USERNAME
-$ export GITHUB_EMAIL=falaleevdanila@gmail.ru                         # Экспорт переменной GITHUB_EMAIL
-$ export GITHUB_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx        # Экспорт переменной GITHUB_TOKEN
-$ alias edit=nano                                                     # Экспорт синонима команды edit
-```
-Переход в папку workspace и активация начального скрипта:
-```ShellSession
-$ cd ${GITHUB_USERNAME}/workspace         # Переход в папку workspace             
-$ source scripts/activate                 # Выполнение скрипта подготовки
-```
-Конфигурация hub:
-```ShellSession
-$ mkdir ~/.config                                   # Создание папки с config
-mkdir: невозможно создать каталог «/home/danila/.config»: Файл существует
-$ cat > ~/.config/hub <<EOF                         # Создание файла hub и запись в него
-github.com:
-- user: ${GITHUB_USERNAME}
-  oauth_token: ${GITHUB_TOKEN}
-  protocol: https
-EOF
-$ git config --global hub.protocol https            # Установка переменной config git
-```
-Работа с git:
-```ShellSession
-$ mkdir projects/lab02 && cd projects/lab02                               # Создание папки и переход в нее
-mkdir: невозможно создать каталог «projects/lab02»: Файл существует
-$ git init                                                                # Создание пустого репозиторий
-Переинициализирован существующий репозиторий Git в /home/danila/FalaleevDanila/workspace/.git/
-$ git config --global user.name ${GITHUB_USERNAME}                        # Установка переменной user.name для git
-$ git config --global user.email ${GITHUB_EMAIL}                          # Установка переменной user.email для git
-# check your git global settings                                          
-$ git config -e --global                                                  # Вывод config из git
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab02.git   # Добавление ссылки репозитория на Github
-fatal: внешний репозиторий origin уже существует
-$ git pull origin master                                                  # Перенос изменения с Github
-warning: не общих коммитов
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-Распаковка объектов: 100% (3/3), готово.
-Из https://github.com/FalaleevDanila/lab02
- * branch            master     -> FETCH_HEAD
- + 5427082...4ec904d master     -> origin/master  (принудительное обновление)
-fatal: отказ слияния несвязанных историй изменений
-$ touch README.md                                                         # Создание README.md
-$ git status                                                              # Посмотр статуса репозитория
-На ветке master
-нечего коммитить, нет изменений в рабочем каталоге
-$ git add README.md                                                       # Добавление README.md в список фиксированных
-$ git commit -m"added README.md"                                          # Закоммитить фиксированные изменения
-На ветке master
-нечего коммитить, нет изменений в рабочем каталоге
-$ git push origin master                                                  # Отправить изменения на гитхаб
- ! [rejected]        master -> master (non-fast-forward)
-error: не удалось отправить некоторые ссылки в «https://github.com/FalaleevDanila/lab02.git»
+[danila@Dellic ~]$ export GITHUB_USERNAME=FalaleevDanila    # Установка переменной GITHUB_USERNAME
+[danila@Dellic ~]$ alias gsed=sed                            # Синоним команды gsed
 ```
 
-Добавить на сервисе **GitHub** в репозитории **lab02** файл **.gitignore**
-со следующем содержимом:
+Настройка рабочего пространства
 
 ```ShellSession
-*build*/
-*install*/
-*.swp
-.idea/
+[danila@Dellic ~]$ cd ${GITHUB_USERNAME}/workspace          # Переход в рабочую директорию
+[danila@Dellic workspace]$ pushd .                          # Сохранение текущей директории  
+~/FalaleevDanila/workspace ~/FalaleevDanila/workspace      
+[danila@Dellic workspace]$ source scripts/activate          # Выполнение скрипта настройки пространства
 ```
-Перенос изменений с github:
+
+Получение файла из предыдущей лабораторной
+
 ```ShellSession
-$ git pull origin master   # Перенос изменений с Github
-remote: Enumerating objects: 4, done.
-remote: Counting objects: 100% (4/4), done.
-remote: Compressing objects: 100% (2/2), done.
-remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-Распаковка объектов: 100% (3/3), готово.
-Из https://github.com/FalaleevDanila/lab02
- * branch            master     -> FETCH_HEAD
-   4ec904d..43b84f2  master     -> origin/master
-fatal: отказ слияния несвязанных историй изменений
-$ git log                  ## Просмотр commits
-commit 28dc2e0170eba6997b9c22167a4289d9b9d91d23 (HEAD -> master)
-Author: FalaleevDanila <falaleevdanila@gmai.ru>
-Date:   Mon Mar 25 01:20:26 2019 +0300
-
-    added sources
-
-commit 727a167b31c240a5df869c229b4c1778d53cc58e
-Merge: 46af5e8 0250a08
-Author: FalaleevDanila <falaleevdanila@gmai.ru>
-Date:   Mon Mar 25 01:08:22 2019 +0300
-
-    Merge branch 'master' of https://github.com/FalaleevDanila/lab02
-
-commit 46af5e8c8661bd97a5f8c8a1a70af1436af67440
-Author: FalaleevDanila <falaleevdanila@gmai.ru>
-Date:   Mon Mar 25 01:05:53 2019 +0300
-
-    added README.md
-
-commit 0250a0817b5f188a051f4440320adc58fe48e0ca
-Author: FalaleevDanila <47750074+FalaleevDanila@users.noreply.github.com>
-Date:   Sun Mar 24 22:08:02 2019 +0300
-
-    Create .gitignore
-
-commit bfa3e848fb1ffdee6b252bcfe09e1200e50e56de
-Author: FalaleevDanila <47750074+FalaleevDanila@users.noreply.github.com>
-Date:   Mon Mar 18 18:35:24 2019 +0300
-
-    Initial commit
-``` 
-Создание папок и файла с кодом:
-```ShellSession
-$ mkdir sources                   # Создание папки sources
-mkdir: невозможно создать каталог «sources»: Файл существует
-$ mkdir include                   # Создание папки include
-mkdir: невозможно создать каталог «include»: Файл существует
-$ mkdir examples                  # Создание папки examples
-mkdir: невозможно создать каталог «examples»: Файл существует
-$ cat > sources/print.cpp <<EOF   # Запись кода в файл
-#include <print.hpp>
-
-void print(const std::string& text, std::ostream& out)
-{
-  out << text;
-}
-
-void print(const std::string& text, std::ofstream& out)
-{
-  out << text;
-}
-EOF
+[danila@Dellic workspace]$ git clone https://github.com/${GITHUB_USERNAME}/lab04 projects/lab05
+Клонирование в «projects/lab05»…
+remote: Enumerating objects: 35, done.
+remote: Counting objects: 100% (35/35), done.
+remote: Compressing objects: 100% (26/26), done.
+remote: Total 35 (delta 8), reused 26 (delta 4), pack-reused 0
+Распаковка объектов: 100% (35/35), готово.
+[danila@Dellic workspace]$ cd projects/lab05
+[danila@Dellic lab05]$ git remote remove origin
+[danila@Dellic lab05]$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab05   # Ссылка на удалённы репозиторий
 ```
-Создание файла с кодом:
+
+Добавление подмодуля тестирования
+
 ```ShellSession
-$ cat > include/print.hpp <<EOF  # Запись кода в файл
-#include <fstream>
-#include <iostream>
-#include <string>
+[danila@Dellic lab05]$ mkdir third-party                                                                 # Создание папки
+[danila@Dellic lab05]$ git submodule add https://github.com/google/googletest third-party/gtest          # Скачивание удаленного репозитория в указанную папку
+Клонирование в «/home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest»…
+remote: Enumerating objects: 48, done.
+remote: Counting objects: 100% (48/48), done.
+remote: Compressing objects: 100% (36/36), done.
+remote: Total 16857 (delta 15), reused 26 (delta 11), pack-reused 16809
+Получение объектов: 100% (16857/16857), 5.86 MiB | 1.17 MiB/s, готово.
+Определение изменений: 100% (12412/12412), готово.
+[danila@Dellic lab05]$ cd third-party/gtest && git checkout release-1.8.1 && cd ../..                    # Переход в указанную папку, переход в указанную ветку
+Примечание: переход на «release-1.8.1».
 
-void print(const std::string& text, std::ofstream& out);
-void print(const std::string& text, std::ostream& out = std::cout);
-EOF
+Вы сейчас в состоянии «отделённого HEAD». Вы можете осмотреться, сделать
+экспериментальные изменения и закоммитить их, также вы можете отменить
+изменения любых коммитов в этом состоянии не затрагивая любые ветки и
+не переходя на них.
+
+Если вы хотите создать новую ветку и сохранить свои коммиты, то вы
+можете сделать это (сейчас или позже) вызвав команду checkout снова,
+но с параметром -b. Например:
+
+  git checkout -b <имя-новой-ветки>
+
+HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-warnings
+[danila@Dellic lab05]$ git add third-party/gtest                                                         # Фиксация изменений
+[danila@Dellic lab05]$ git commit -m"added gtest framework"                                              # Коммит зафиксированных изменений
+[master affa043] added gtest framework
+ 2 files changed, 4 insertions(+)
+ create mode 100644 .gitmodules
+ create mode 160000 third-party/gtest
 ```
-Создание файла с кодом:
+
+Добавление в CMakeLists.txt сборку тестов
+
 ```ShellSession
-$ cat > examples/example1.cpp <<EOF   # Запись кода в файл
-#include <print.hpp>
-
-int main(int argc, char** argv)
-{
-  print("hello");
-}
-EOF
+[danila@Dellic lab05]$ gsed -i '/option(BUILD_EXAMPLES "Build examples" OFF)/a\    # Вставка второй строки
+> option(BUILD_TESTS "Build tests" OFF)
+> ' CMakeLists.txt
+[danila@Dellic lab05]$ cat >> CMakeLists.txt <<EOF                                 # Дописывание в CMakeLists.txt указанного кода
+> 
+> if(BUILD_TESTS)
+>   enable_testing()
+>   add_subdirectory(third-party/gtest)
+>   file(GLOB \${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
+>   add_executable(check \${\${PROJECT_NAME}_TEST_SOURCES})
+>   target_link_libraries(check \${PROJECT_NAME} gtest_main)
+>   add_test(NAME check COMMAND check)
+> endif()
+> EOF
 ```
-Создание файла с кодом:
+Создание исходного кода с тестами
+
 ```ShellSession
-$ cat > examples/example2.cpp <<EOF   # Запись кода в файл
-#include <print.hpp>
-
-#include <fstream>
-
-int main(int argc, char** argv)
-{
-  std::ofstream file("log.txt");
-  print(std::string("hello"), file);
-}
-EOF
+[danila@Dellic lab05]$ mkdir tests                         # Создание указанной папки
+[danila@Dellic lab05]$ cat > tests/test1.cpp <<EOF         # Создание указанного файла с указанным кодом
+> #include <print.hpp>
+> 
+> #include <gtest/gtest.h>
+> 
+> TEST(Print, InFileStream)
+> {
+>   std::string filepath = "file.txt";
+>   std::string text = "hello";
+>   std::ofstream out{filepath};
+> 
+>   print(text, out);
+>   out.close();
+> 
+>   std::string result;
+>   std::ifstream in{filepath};
+>   in >> result;
+> 
+>   EXPECT_EQ(result, text);
+> }
+> EOF
 ```
-Редактирование README.md:
-```ShellSession         
-$ edit README.md    # Редактировать README.md
-```
-Просмотр состояния репозитория и отправка изменений на github:
+
+Сборка проекта
+
 ```ShellSession
-$ git status                          # Просмотр статуса репозитория
-На ветке master
-Изменения, которые не в индексе для коммита:
-  (используйте «git add <файл>…», чтобы добавить файл в индекс)
-  (используйте «git checkout -- <файл>…», чтобы отменить изменения
-   в рабочем каталоге)
+[danila@Dellic lab05]$ cmake -H. -B_build -DBUILD_TESTS=ON                    # Конфигурирование
+-- The C compiler identification is GNU 8.2.1
+-- The CXX compiler identification is GNU 8.2.1
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found PythonInterp: /usr/bin/python (found version "3.7.2") 
+-- Looking for pthread.h
+-- Looking for pthread.h - found
+-- Looking for pthread_create
+-- Looking for pthread_create - not found
+-- Check if compiler accepts -pthread
+-- Check if compiler accepts -pthread - yes
+-- Found Threads: TRUE  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/danila/FalaleevDanila/workspace/projects/lab05/_build
+[danila@Dellic lab05]$ cmake --build _build                                 # Компиляция
+Scanning dependencies of target gtest
+[  8%] Building CXX object third-party/gtest/googlemock/gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o                                                                                               
+[ 16%] Linking CXX static library libgtest.a
+[ 16%] Built target gtest
+Scanning dependencies of target print
+[ 25%] Building CXX object CMakeFiles/print.dir/sources/print.cpp.o
+[ 33%] Linking CXX static library libprint.a
+[ 33%] Built target print
+Scanning dependencies of target gtest_main
+[ 41%] Building CXX object third-party/gtest/googlemock/gtest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o                                                                                         
+[ 50%] Linking CXX static library libgtest_main.a
+[ 50%] Built target gtest_main
+Scanning dependencies of target check
+[ 58%] Building CXX object CMakeFiles/check.dir/tests/test1.cpp.o
+[ 66%] Linking CXX executable check
+[ 66%] Built target check
+Scanning dependencies of target gmock
+[ 75%] Building CXX object third-party/gtest/googlemock/CMakeFiles/gmock.dir/src/gmock-all.cc.o
+[ 83%] Linking CXX static library libgmock.a
+[ 83%] Built target gmock
+Scanning dependencies of target gmock_main
+[ 91%] Building CXX object third-party/gtest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o                                                                                               
+[100%] Linking CXX static library libgmock_main.a
+[100%] Built target gmock_main
+[danila@Dellic lab05]$  cmake --build _build --target test                  # Компиляция указанной цели
+Running tests...
+Test project /home/danila/FalaleevDanila/workspace/projects/lab05/_build
+    Start 1: check
+1/1 Test #1: check ............................   Passed    0.01 sec
 
-        изменено:      include/print.hpp
+100% tests passed, 0 tests failed out of 1
 
-нет изменений добавленных для коммита
-(используйте «git add» и/или «git commit -a»)
-$ git add .                           # Фиксация всех изменений
-$ git commit -m"added sources"        # Commit зафиксированных изменений
-[master 87d961c] added sources
- 1 file changed, 8 deletions(-)
-$ git push origin master              # Отправка изменений на Github
-``` 
+Total Test time (real) =   0.01 sec
+```
+
+Дополнительная проверка тестов
+
+```ShellSession
+[danila@Dellic lab05]$ _build/check                                               # Выполнение исполняемого файла с тестами
+Running main() from /home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest/googletest/src/gtest_main.cc
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from Print
+[ RUN      ] Print.InFileStream
+[       OK ] Print.InFileStream (0 ms)
+[----------] 1 test from Print (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (0 ms total)
+[  PASSED  ] 1 test.
+[danila@Dellic lab05]$ cmake --build _build --target test -- ARGS=--verbose       # Компиляция с выводом всей информации
+Running tests...
+UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab05/_build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab05/_build/DartConfiguration.tcl
+Test project /home/danila/FalaleevDanila/workspace/projects/lab05/_build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: check
+
+1: Test command: /home/danila/FalaleevDanila/workspace/projects/lab05/_build/check
+1: Test timeout computed to be: 10000000
+1: Running main() from /home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest/googletest/src/gtest_main.cc
+1: [==========] Running 1 test from 1 test case.
+1: [----------] Global test environment set-up.
+1: [----------] 1 test from Print
+1: [ RUN      ] Print.InFileStream
+1: [       OK ] Print.InFileStream (1 ms)
+1: [----------] 1 test from Print (1 ms total)
+1: 
+1: [----------] Global test environment tear-down
+1: [==========] 1 test from 1 test case ran. (1 ms total)
+1: [  PASSED  ] 1 test.
+1/1 Test #1: check ............................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec
+```
+
+Обновление Travis CI конфига и бэйджа
+
+```ShellSession
+[danila@Dellic lab05]$ gsed -i 's/lab04/lab05/g' README.md            # Работа со строками
+[danila@Dellic lab05]$ gsed -i 's/\(DCMAKE_INSTALL_PREFIX=_install\)/\1 -DBUILD_TESTS=ON/' .travis.yml
+[danila@Dellic lab05]$ gsed -i '/cmake --build _build --target install/a\
+> - cmake --build _build --target test -- ARGS=--verbose
+> ' .travis.yml
+
+```
+
+Синтаксическая проверка конфига
+
+```ShellSession
+[danila@Dellic lab05]$ travis lint
+Warnings for .travis.yml:
+[x] value for addons section is empty, dropping
+[x] in addons section: unexpected key apt, dropping
+
+```
+
+Отправка изменений
+
+```ShellSession
+[danila@Dellic lab05]$ git add .travis.yml                 # Фиксация указанного файла
+[danila@Dellic lab05]$ git add tests
+[danila@Dellic lab05]$ git add -p
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 05cc72b..176b7ba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,6 +4,7 @@ set(CMAKE_CXX_STANDARD 11)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ 
+ option(BUILD_EXAMPLES "Build examples" OFF)
++option(BUILD_TESTS "Build tests" OFF)
+ 
+ project(print)
+ 
+Stage this hunk [y,n,q,a,d,j,J,g,/,e,?]? y
+@@ -34,3 +35,12 @@ install(TARGETS print
+ 
+ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION include)
+ install(EXPORT print-config DESTINATION cmake)
++
++if(BUILD_TESTS)
++  enable_testing()
++  add_subdirectory(third-party/gtest)
++  file(GLOB ${PROJECT_NAME}_TEST_SOURCES tests/*.cpp)
++  add_executable(check ${${PROJECT_NAME}_TEST_SOURCES})
++  target_link_libraries(check ${PROJECT_NAME} gtest_main)
++  add_test(NAME check COMMAND check)
++endif()
+Stage this hunk [y,n,q,a,d,K,g,/,e,?]? y
+
+[danila@Dellic lab05]$ git commit -m"added tests"           # Коммит зафиксированных изменений
+[master 8116b04] added tests
+ 4 files changed, 32 insertions(+), 1 deletion(-)
+ create mode 100644 file.txt
+ create mode 100644 tests/test1.cpp
+[danila@Dellic lab05]$ git push origin master               # Отправка изменений в удаленный репозиторий
+Username for 'https://github.com': FalaleevDanila
+Password for 'https://FalaleevDanila@github.com': 
+Перечисление объектов: 46, готово.
+Подсчет объектов: 100% (46/46), готово.
+При сжатии изменений используется до 12 потоков
+Сжатие объектов: 100% (38/38), готово.
+Запись объектов: 100% (46/46), 12.02 KiB | 4.01 MiB/s, готово.
+Всего 46 (изменения 12), повторно использовано 0 (изменения 0)
+remote: Resolving deltas: 100% (12/12), done.
+To https://github.com/FalaleevDanila/lab05
+ * [new branch]      master -> master
+
+```
+
+Авторизация и активация репозитория в travis
+
+```ShellSession
+[danila@Dellic lab05]$ travis login --auto
+We need your GitHub login to identify you.
+This information will not be sent to Travis CI, only to api.github.com.
+The password will not be displayed.
+
+Try running with --github-token or --auto if you don't want to enter your password anyway.
+
+Username: FalaleevDanila
+Password for FalaleevDanila: *********
+Successfully logged in as FalaleevDanila!
+[danila@Dellic lab05]$ travis enable             # Включение непрерывной интеграции для репозитория
+Detected repository as FalaleevDanila/lab05, is this correct? |yes| yes
+FalaleevDanila/lab05: enabled :)
+```
+
+Сохранение результата
+
+```ShellSession
+[danila@Dellic lab05]$ mkdir artifacts                                                 # Создание директории
+[danila@Dellic lab05]$ sleep 20s && gnome-screenshot --file artifacts/screenshot.png   
+bash: gnome-screenshot: команда не найдена
+```
 
 ## Report
 
 ```ShellSession
-$ cd ~/workspace/labs/
-$ export LAB_NUMBER=02
-$ git clone https://github.com/tp-labs/lab${LAB_NUMBER}.git tasks/lab${LAB_NUMBER}
+$ popd
+$ export LAB_NUMBER=05
+$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
 $ mkdir reports/lab${LAB_NUMBER}
 $ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
 $ cd reports/lab${LAB_NUMBER}
@@ -226,54 +356,19 @@ $ gistup -m "lab${LAB_NUMBER}"
 
 ## Homework
 
-### Part I
-
-1. Создайте пустой репозиторий на сервисе github.com (или gitlab.com, или bitbucket.com).
-2. Выполните инструкцию по созданию первого коммита на странице репозитория, созданного на предыдещем шаге.
-3. Создайте файл `hello_world.cpp` в локальной копии репозитория (который должен был появиться на шаге 2). Реализуйте программу **Hello world** на языке C++ используя плохой стиль кода. Например, после заголовочных файлов вставьте строку `using namespace std;`.
-4. Добавьте этот файл в локальную копию репозитория.
-5. Закоммитьте изменения с *осмысленным* сообщением.
-6. Изменитьте исходный код так, чтобы программа через стандартный поток ввода запрашивалось имя пользователя. А в стандартный поток вывода печаталось сообщение `Hello world from @name`, где `@name` имя пользователя.
-7. Закоммитьте новую версию программы. Почему не надо добавлять файл повторно `git add`?
-8. Запуште изменения в удалёный репозиторий.
-9. Проверьте, что история коммитов доступна в удалёный репозитории.
-
-### Part II
-
-**Note:** *Работать продолжайте с теми же репоззиториями, что и в первой части задания.*
-1. В локальной копии репозитория создайте локальную ветку `patch1`.
-2. Внесите изменения в ветке `patch1` по исправлению кода и избавления от `using namespace std;`.
-3. **commit**, **push** локальную ветку в удалённый репозиторий.
-4. Проверьте, что ветка `patch1` доступна в удалёный репозитории.
-5. Создайте pull-request `patch1 -> master`.
-6. В локальной копии в ветке `patch1` добавьте в исходный код комментарии.
-7. **commit**, **push**.
-8. Проверьте, что новые изменения есть в созданном на **шаге 5** pull-request
-9. В удалённый репозитории выполните  слияние PR `patch1 -> master` и удалите ветку `patch1` в удаленном репозитории.
-10. Локально выполните **pull**.
-11. С помощью команды **git log** просмотрите историю в локальной версии ветки `master`.
-12. Удалите локальную ветку `patch1`.
-
-### Part III
-
-**Note:** *Работать продолжайте с теми же репоззиториями, что и в первой части задания.*
-1. Создайте новую локальную ветку `patch2`.
-2. Измените *code style* с помощью утилиты [**clang-format**](http://clang.llvm.org/docs/ClangFormat.html). Например, используя опцию `-style=Mozilla`.
-3. **commit**, **push**, создайте pull-request `patch2 -> master`.
-4. В ветке **master** в удаленном репозитории измените комментарии, например, расставьте знаки препинания, переведите комментарии на другой язык.
-5. Убедитесь, что в pull-request появились *конфликтны*.
-6. Для этого локально выполните **pull** + **rebase** (точную последовательность команд, следует узнать самостоятельно). **Исправьте конфликты**.
-7. Сделайте *force push* в ветку `patch2`
-8. Убедитель, что в pull-request пропали конфликтны. 
-9. Вмержите pull-request `patch2 -> master`.
+### Задание
+1. Создайте `CMakeList.txt` для библиотеки *banking*.
+2. Создайте модульные тесты на классы `Transaction` и `Account`.
+    * Используйте mock-объекты.
+    * Покрытие кода должно составлять 100%.
+3. Настройте сборочную процедуру на **TravisCI**.
+4. Настройте [Coveralls.io](https://coveralls.io/).
 
 ## Links
 
-- [hub](https://hub.github.com/)
-- [GitHub](https://github.com)
-- [Bitbucket](https://bitbucket.org)
-- [Gitlab](https://about.gitlab.com)
-- [LearnGitBranching](http://learngitbranching.js.org/)
+- [C++ CI: Travis, CMake, GTest, Coveralls & Appveyor](http://david-grs.github.io/cpp-clang-travis-cmake-gtest-coveralls-appveyor/)
+- [Boost.Tests](http://www.boost.org/doc/libs/1_63_0/libs/test/doc/html/)
+- [Catch](https://github.com/catchorg/Catch2)
 
 ```
 Copyright (c) 2015-2019 The ISC Authors
