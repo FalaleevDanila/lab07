@@ -8,7 +8,7 @@ $ open https://github.com/google/googletest
 
 ## Tasks
 
-- [x] 1. Создать публичный репозиторий с названием **lab05** на сервисе **GitHub**
+- [x] 1. Создать публичный репозиторий с названием **lab06** на сервисе **GitHub**
 - [x] 2. Выполнить инструкцию учебного материала
 - [x] 3. Ознакомиться со ссылками учебного материала
 - [x] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
@@ -34,31 +34,31 @@ $ open https://github.com/google/googletest
 Получение файла из предыдущей лабораторной
 
 ```ShellSession
-[danila@Dellic workspace]$ git clone https://github.com/${GITHUB_USERNAME}/lab04 projects/lab05
-Клонирование в «projects/lab05»…
+[danila@Dellic workspace]$ git clone https://github.com/${GITHUB_USERNAME}/lab04 projects/lab06
+Клонирование в «projects/lab06»…
 remote: Enumerating objects: 35, done.
 remote: Counting objects: 100% (35/35), done.
 remote: Compressing objects: 100% (26/26), done.
 remote: Total 35 (delta 8), reused 26 (delta 4), pack-reused 0
 Распаковка объектов: 100% (35/35), готово.
-[danila@Dellic workspace]$ cd projects/lab05
-[danila@Dellic lab05]$ git remote remove origin
-[danila@Dellic lab05]$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab05   # Ссылка на удалённы репозиторий
+[danila@Dellic workspace]$ cd projects/lab06
+[danila@Dellic lab06]$ git remote remove origin
+[danila@Dellic lab06]$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab06   # Ссылка на удалённы репозиторий
 ```
 
 Добавление подмодуля тестирования
 
 ```ShellSession
-[danila@Dellic lab05]$ mkdir third-party                                                                 # Создание папки
-[danila@Dellic lab05]$ git submodule add https://github.com/google/googletest third-party/gtest          # Скачивание удаленного репозитория в указанную папку
-Клонирование в «/home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest»…
+[danila@Dellic lab06]$ mkdir third-party                                                                 # Создание папки
+[danila@Dellic lab06]$ git submodule add https://github.com/google/googletest third-party/gtest          # Скачивание удаленного репозитория в указанную папку
+Клонирование в «/home/danila/FalaleevDanila/workspace/projects/lab06/third-party/gtest»…
 remote: Enumerating objects: 48, done.
 remote: Counting objects: 100% (48/48), done.
 remote: Compressing objects: 100% (36/36), done.
 remote: Total 16857 (delta 15), reused 26 (delta 11), pack-reused 16809
 Получение объектов: 100% (16857/16857), 5.86 MiB | 1.17 MiB/s, готово.
 Определение изменений: 100% (12412/12412), готово.
-[danila@Dellic lab05]$ cd third-party/gtest && git checkout release-1.8.1 && cd ../..                    # Переход в указанную папку, переход в указанную ветку
+[danila@Dellic lab06]$ cd third-party/gtest && git checkout release-1.8.1 && cd ../..                    # Переход в указанную папку, переход в указанную ветку
 Примечание: переход на «release-1.8.1».
 
 Вы сейчас в состоянии «отделённого HEAD». Вы можете осмотреться, сделать
@@ -73,8 +73,8 @@ remote: Total 16857 (delta 15), reused 26 (delta 11), pack-reused 16809
   git checkout -b <имя-новой-ветки>
 
 HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-warnings
-[danila@Dellic lab05]$ git add third-party/gtest                                                         # Фиксация изменений
-[danila@Dellic lab05]$ git commit -m"added gtest framework"                                              # Коммит зафиксированных изменений
+[danila@Dellic lab06]$ git add third-party/gtest                                                         # Фиксация изменений
+[danila@Dellic lab06]$ git commit -m"added gtest framework"                                              # Коммит зафиксированных изменений
 [master affa043] added gtest framework
  2 files changed, 4 insertions(+)
  create mode 100644 .gitmodules
@@ -84,10 +84,10 @@ HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-w
 Добавление в CMakeLists.txt сборку тестов
 
 ```ShellSession
-[danila@Dellic lab05]$ gsed -i '/option(BUILD_EXAMPLES "Build examples" OFF)/a\    # Вставка второй строки
+[danila@Dellic lab06]$ gsed -i '/option(BUILD_EXAMPLES "Build examples" OFF)/a\    # Вставка второй строки
 > option(BUILD_TESTS "Build tests" OFF)
 > ' CMakeLists.txt
-[danila@Dellic lab05]$ cat >> CMakeLists.txt <<EOF                                 # Дописывание в CMakeLists.txt указанного кода
+[danila@Dellic lab06]$ cat >> CMakeLists.txt <<EOF                                 # Дописывание в CMakeLists.txt указанного кода
 > 
 > if(BUILD_TESTS)
 >   enable_testing()
@@ -102,8 +102,8 @@ HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-w
 Создание исходного кода с тестами
 
 ```ShellSession
-[danila@Dellic lab05]$ mkdir tests                         # Создание указанной папки
-[danila@Dellic lab05]$ cat > tests/test1.cpp <<EOF         # Создание указанного файла с указанным кодом
+[danila@Dellic lab06]$ mkdir tests                         # Создание указанной папки
+[danila@Dellic lab06]$ cat > tests/test1.cpp <<EOF         # Создание указанного файла с указанным кодом
 > #include <print.hpp>
 > 
 > #include <gtest/gtest.h>
@@ -129,7 +129,7 @@ HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-w
 Сборка проекта
 
 ```ShellSession
-[danila@Dellic lab05]$ cmake -H. -B_build -DBUILD_TESTS=ON                    # Конфигурирование
+[danila@Dellic lab06]$ cmake -H. -B_build -DBUILD_TESTS=ON                    # Конфигурирование
 -- The C compiler identification is GNU 8.2.1
 -- The CXX compiler identification is GNU 8.2.1
 -- Check for working C compiler: /usr/bin/cc
@@ -154,8 +154,8 @@ HEAD сейчас на 2fe3bd99 Merge pull request #1433 from dsacre/fix-clang-w
 -- Found Threads: TRUE  
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/danila/FalaleevDanila/workspace/projects/lab05/_build
-[danila@Dellic lab05]$ cmake --build _build                                 # Компиляция
+-- Build files have been written to: /home/danila/FalaleevDanila/workspace/projects/lab06/_build
+[danila@Dellic lab06]$ cmake --build _build                                 # Компиляция
 Scanning dependencies of target gtest
 [  8%] Building CXX object third-party/gtest/googlemock/gtest/CMakeFiles/gtest.dir/src/gtest-all.cc.o                                                                                               
 [ 16%] Linking CXX static library libgtest.a
@@ -180,9 +180,9 @@ Scanning dependencies of target gmock_main
 [ 91%] Building CXX object third-party/gtest/googlemock/CMakeFiles/gmock_main.dir/src/gmock_main.cc.o                                                                                               
 [100%] Linking CXX static library libgmock_main.a
 [100%] Built target gmock_main
-[danila@Dellic lab05]$  cmake --build _build --target test                  # Компиляция указанной цели
+[danila@Dellic lab06]$  cmake --build _build --target test                  # Компиляция указанной цели
 Running tests...
-Test project /home/danila/FalaleevDanila/workspace/projects/lab05/_build
+Test project /home/danila/FalaleevDanila/workspace/projects/lab06/_build
     Start 1: check
 1/1 Test #1: check ............................   Passed    0.01 sec
 
@@ -194,8 +194,8 @@ Total Test time (real) =   0.01 sec
 Дополнительная проверка тестов
 
 ```ShellSession
-[danila@Dellic lab05]$ _build/check                                               # Выполнение исполняемого файла с тестами
-Running main() from /home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest/googletest/src/gtest_main.cc
+[danila@Dellic lab06]$ _build/check                                               # Выполнение исполняемого файла с тестами
+Running main() from /home/danila/FalaleevDanila/workspace/projects/lab06/third-party/gtest/googletest/src/gtest_main.cc
 [==========] Running 1 test from 1 test case.
 [----------] Global test environment set-up.
 [----------] 1 test from Print
@@ -206,11 +206,11 @@ Running main() from /home/danila/FalaleevDanila/workspace/projects/lab05/third-p
 [----------] Global test environment tear-down
 [==========] 1 test from 1 test case ran. (0 ms total)
 [  PASSED  ] 1 test.
-[danila@Dellic lab05]$ cmake --build _build --target test -- ARGS=--verbose       # Компиляция с выводом всей информации
+[danila@Dellic lab06]$ cmake --build _build --target test -- ARGS=--verbose       # Компиляция с выводом всей информации
 Running tests...
-UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab05/_build/DartConfiguration.tcl
-UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab05/_build/DartConfiguration.tcl
-Test project /home/danila/FalaleevDanila/workspace/projects/lab05/_build
+UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab06/_build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/home/danila/FalaleevDanila/workspace/projects/lab06/_build/DartConfiguration.tcl
+Test project /home/danila/FalaleevDanila/workspace/projects/lab06/_build
 Constructing a list of tests
 Done constructing a list of tests
 Updating test list for fixtures
@@ -220,9 +220,9 @@ Checking test dependency graph end
 test 1
     Start 1: check
 
-1: Test command: /home/danila/FalaleevDanila/workspace/projects/lab05/_build/check
+1: Test command: /home/danila/FalaleevDanila/workspace/projects/lab06/_build/check
 1: Test timeout computed to be: 10000000
-1: Running main() from /home/danila/FalaleevDanila/workspace/projects/lab05/third-party/gtest/googletest/src/gtest_main.cc
+1: Running main() from /home/danila/FalaleevDanila/workspace/projects/lab06/third-party/gtest/googletest/src/gtest_main.cc
 1: [==========] Running 1 test from 1 test case.
 1: [----------] Global test environment set-up.
 1: [----------] 1 test from Print
@@ -243,9 +243,9 @@ Total Test time (real) =   0.01 sec
 Обновление Travis CI конфига и бэйджа
 
 ```ShellSession
-[danila@Dellic lab05]$ gsed -i 's/lab04/lab05/g' README.md            # Работа со строками
-[danila@Dellic lab05]$ gsed -i 's/\(DCMAKE_INSTALL_PREFIX=_install\)/\1 -DBUILD_TESTS=ON/' .travis.yml
-[danila@Dellic lab05]$ gsed -i '/cmake --build _build --target install/a\
+[danila@Dellic lab06]$ gsed -i 's/lab04/lab06/g' README.md            # Работа со строками
+[danila@Dellic lab06]$ gsed -i 's/\(DCMAKE_INSTALL_PREFIX=_install\)/\1 -DBUILD_TESTS=ON/' .travis.yml
+[danila@Dellic lab06]$ gsed -i '/cmake --build _build --target install/a\
 > - cmake --build _build --target test -- ARGS=--verbose
 > ' .travis.yml
 
@@ -254,7 +254,7 @@ Total Test time (real) =   0.01 sec
 Синтаксическая проверка конфига
 
 ```ShellSession
-[danila@Dellic lab05]$ travis lint
+[danila@Dellic lab06]$ travis lint
 Warnings for .travis.yml:
 [x] value for addons section is empty, dropping
 [x] in addons section: unexpected key apt, dropping
@@ -264,9 +264,9 @@ Warnings for .travis.yml:
 Отправка изменений
 
 ```ShellSession
-[danila@Dellic lab05]$ git add .travis.yml                 # Фиксация указанного файла
-[danila@Dellic lab05]$ git add tests
-[danila@Dellic lab05]$ git add -p
+[danila@Dellic lab06]$ git add .travis.yml                 # Фиксация указанного файла
+[danila@Dellic lab06]$ git add tests
+[danila@Dellic lab06]$ git add -p
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 05cc72b..176b7ba 100644
 --- a/CMakeLists.txt
@@ -295,12 +295,12 @@ Stage this hunk [y,n,q,a,d,j,J,g,/,e,?]? y
 +endif()
 Stage this hunk [y,n,q,a,d,K,g,/,e,?]? y
 
-[danila@Dellic lab05]$ git commit -m"added tests"           # Коммит зафиксированных изменений
+[danila@Dellic lab06]$ git commit -m"added tests"           # Коммит зафиксированных изменений
 [master 8116b04] added tests
  4 files changed, 32 insertions(+), 1 deletion(-)
  create mode 100644 file.txt
  create mode 100644 tests/test1.cpp
-[danila@Dellic lab05]$ git push origin master               # Отправка изменений в удаленный репозиторий
+[danila@Dellic lab06]$ git push origin master               # Отправка изменений в удаленный репозиторий
 Username for 'https://github.com': FalaleevDanila
 Password for 'https://FalaleevDanila@github.com': 
 Перечисление объектов: 46, готово.
@@ -310,7 +310,7 @@ Password for 'https://FalaleevDanila@github.com':
 Запись объектов: 100% (46/46), 12.02 KiB | 4.01 MiB/s, готово.
 Всего 46 (изменения 12), повторно использовано 0 (изменения 0)
 remote: Resolving deltas: 100% (12/12), done.
-To https://github.com/FalaleevDanila/lab05
+To https://github.com/FalaleevDanila/lab06
  * [new branch]      master -> master
 
 ```
@@ -318,7 +318,7 @@ To https://github.com/FalaleevDanila/lab05
 Авторизация и активация репозитория в travis
 
 ```ShellSession
-[danila@Dellic lab05]$ travis login --auto
+[danila@Dellic lab06]$ travis login --auto
 We need your GitHub login to identify you.
 This information will not be sent to Travis CI, only to api.github.com.
 The password will not be displayed.
@@ -328,16 +328,16 @@ Try running with --github-token or --auto if you don't want to enter your passwo
 Username: FalaleevDanila
 Password for FalaleevDanila: *********
 Successfully logged in as FalaleevDanila!
-[danila@Dellic lab05]$ travis enable             # Включение непрерывной интеграции для репозитория
-Detected repository as FalaleevDanila/lab05, is this correct? |yes| yes
-FalaleevDanila/lab05: enabled :)
+[danila@Dellic lab06]$ travis enable             # Включение непрерывной интеграции для репозитория
+Detected repository as FalaleevDanila/lab06, is this correct? |yes| yes
+FalaleevDanila/lab06: enabled :)
 ```
 
 Сохранение результата
 
 ```ShellSession
-[danila@Dellic lab05]$ mkdir artifacts                                                 # Создание директории
-[danila@Dellic lab05]$ sleep 20s && gnome-screenshot --file artifacts/screenshot.png   
+[danila@Dellic lab06]$ mkdir artifacts                                                 # Создание директории
+[danila@Dellic lab06]$ sleep 20s && gnome-screenshot --file artifacts/screenshot.png   
 bash: gnome-screenshot: команда не найдена
 ```
 
